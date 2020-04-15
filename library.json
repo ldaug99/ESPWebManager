@@ -1,0 +1,25 @@
+{
+	"name":"ESP Web Manager",
+	"description":"Web Manager with API functionality library for ESP32",
+	"keywords":"http,async,webserver",
+	"authors":
+	{
+	  "name": "Lasse Daugbjerg",
+	  "maintainer": true
+	},
+	"repository":
+	{
+	  "type": "git",
+	  "url": "https://github.com/ldaug99/ESPWebManager.git"
+	},
+	"version": "0.1",
+	"license": "LGPL-3.0",
+	"frameworks": "arduino",
+	"platforms": ["espressif32"],
+	"dependencies": [
+	  {
+		"name": "ESPAsyncWebServer",
+		"platforms": "espressif32"
+	  }
+	]
+  }
