@@ -140,17 +140,25 @@ void webManager::onResourceRequest(const webContentEntry *entry) {
 	contentType = contentType.substring(contentType.lastIndexOf(".") + 1, contentType.length());
 	// Send simple text response
 	_server->on(entry->webPath, entry->methods, [fileName, contentType](AsyncWebServerRequest *request){
-		//request->send(SPIFFS, fileName, "text/" + contentType);
+		// Pass back resource
 		request->send(SPIFFS, fileName);
 	});
 }
 
 // API request responder
 void webManager::onAPIrequest(const webContentEntry *entry) {
+	// Prepare webPath for API request, prepare buffer
+	char apiPath[strlen(entry->webPath) + 2];
+	// Copy webpath to buffer
+	strcpy(apiPath, entry->webPath);
+	// Add slash and wildcard
+	strcat(apiPath, "/*");
 	// HTML API request route
-	_server->on(entry->webPath, entry->methods, [this](AsyncWebServerRequest *request){
+	_server->on(apiPath, entry->methods, [entry,this](AsyncWebServerRequest *request){
 		// Get relative URL form the request
 		String requestURL = request->url().c_str();
+		// Remove API url part
+		requestURL = requestURL.substring(strlen(entry->webPath) + 1);
 		// Prepare API reply
 		apiResponse reply;
 		// Handle the API request, check if using custom handler

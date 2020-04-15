@@ -10,14 +10,18 @@
  * varaibles on the ESP, using simple web request which can be
  * implemented in javascript, using the XMLHttpRequest()
  * function.
- * This library is build uppon the SPIFFS library and the 
- * ESPAsyncWebServer library, both of which are required to 
- * run this library.
+ * 
+ * This library is build uppon the Arduino-ESP core library,
+ * SPIFFS library and the ESPAsyncWebServer library, both 
+ * of which are required to run this library.
+ * 
  * SPIFFS should be included as part of the Arduino-ESP32 
  * library, which can be found at:
  * https://github.com/espressif/arduino-esp32
+ * 
  * ESPAsyncWebServer can be found at:
  * https://github.com/me-no-dev/ESPAsyncWebServer
+ * 
  * The library is distrubuted with the GNU Lesser General 
  * Public License v2.1, as per requirement of the Arduino-ESP32
  * and ESPAsyncWebServer library.
@@ -29,17 +33,21 @@
 #define _WebAPI_
 
 #include "Arduino.h"
+#include "ESPAsyncWebServer.h"
 
 #define useVerboseSerial true
 
 // State types for the API manager
 typedef enum {
-  	DOUBLE, // Value is a double
-  	LONG, // Value is a long
-  	ULONG, // Value is a unsigned long
+  	FLOAT, // Value is a double
+  	INT, // Value is a long
+  	UINT, // Value is a unsigned long
 	CHARA, // Value is a char array with 8 array places
 	BOOL // Value is a bool
 } valueTypes; 
+
+// Char array size
+#define charArraySize 4
 
 // API keyword template, for defining avaliable calls to the API
 struct apiKeyword {
@@ -47,10 +55,10 @@ struct apiKeyword {
 	String htmlPlaceholder; // HTML placeholder to search for
 	uint8_t valueType; // The type of value that the keyword codes for 
 	union {
-		double_t floatValue;
-		int64_t longValue;
-		uint64_t ulongValue;
-		char charArrayValue[8];
+		float_t floatValue;
+		int32_t intValue;
+		uint32_t uintValue;
+		char charArrayValue[charArraySize];
 		bool boolValue;
 	} keyValue;
 };
@@ -82,5 +90,23 @@ class WebAPI {
 		apiKeyword *_apiKeywords;
 		// Number of keywords
 		const uint8_t _keywords;
+
+		// Get responder
+		apiResponse apiGet(String *keyword);
+		// Set responder
+		apiResponse apiSet(String *keyword, String *value);
+
+		// Find keyword in keywords list
+		int16_t findKeywordIndex(String *keywordName);
+		// Find htmlPlaceholder in keywords list
+		int16_t findPlaceholderIndex(const String &placeholder);
+
+		// Get value, based on type
+		apiResponse getValueByType(uint8_t index);
+		// Set value, based on type
+		apiResponse setValueByType(uint8_t index, String *value);
+
+		// Process placeholder by type
+		String processPlaceholderByType(uint8_t index);
 };
 #endif
