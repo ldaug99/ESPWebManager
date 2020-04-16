@@ -87,7 +87,7 @@ class WebAPI {
 
 	private:
 		// API keywords struct		
-		apiKeyword *_apiKeywords;
+		const apiKeyword *_apiKeywords;
 		// Number of keywords
 		const uint8_t _keywords;
 
