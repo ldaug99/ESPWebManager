@@ -189,25 +189,7 @@ int16_t WebAPI::findPlaceholderIndex(const String &placeholder) {
 		if (placeholder.indexOf(_apiKeywords[i].htmlPlaceholder) >= 0) {
 			#ifdef useVerboseSerial
 				Serial.print("WebAPI::findPlaceholderIndex(), Found HTML placeholder with index: ");
-				Serial.print(i);
-				Serial.print(" , and value: ");
-				switch (_apiKeywords[i].valueType) {
-					case FLOAT: {
-						Serial.println(String(_apiKeywords[i].keyValue.floatValue));
-					} break;
-					case INT: {
-						Serial.println(String(_apiKeywords[i].keyValue.intValue));
-					} break;
-					case UINT: {
-						Serial.println(String(_apiKeywords[i].keyValue.uintValue));
-					} break;
-					case CHARA: {
-						Serial.println(String(_apiKeywords[i].keyValue.charArrayValue));
-					} break;
-					case BOOL: {
-						Serial.println(String(_apiKeywords[i].keyValue.boolValue));
-					} break;
-				}
+				Serial.println(i);
 			#endif
 			return i;
 		}
