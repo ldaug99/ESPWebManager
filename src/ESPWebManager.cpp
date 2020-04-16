@@ -40,7 +40,7 @@ webManager::webManager(const webContentEntry *webContent, const uint8_t contentE
 }
 
 // Constructor, API enabled
-webManager::webManager(const webContentEntry *webContent, const uint8_t contentEntries, apiKeyword *apiKeywords, const uint8_t keywords) : _webContent(webContent), _contentEntries(contentEntries){
+webManager::webManager(const webContentEntry *webContent, const uint8_t contentEntries, const apiKeyword *apiKeywords, const uint8_t keywords) : _webContent(webContent), _contentEntries(contentEntries){
 	// Start instance of WebAPI
 	api = new WebAPI(apiKeywords, keywords);
 }

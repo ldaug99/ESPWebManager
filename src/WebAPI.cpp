@@ -37,10 +37,6 @@
 
 // Constructor
 WebAPI::WebAPI(const apiKeyword *apiKeywords, const uint8_t keywords) :  _keywords(keywords){
-	
-	// Prepare local API keywords
-	//_apiKeywords = apiKeyword[_keywords];
-
 	// Write API keywords to local copy
 	for (uint8_t i = 0; i < _keywords; i++) {
 		// Copy request keyword
