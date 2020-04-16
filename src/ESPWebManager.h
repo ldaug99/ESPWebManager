@@ -70,7 +70,7 @@ class webManager {
 		// Constructor with API disabled
 		webManager(const webContentEntry *webContent, const uint8_t contentEntries);
 		// Constructor with API enabled
-		webManager(const webContentEntry *webContent, const uint8_t contentEntries, const apiKeyword *apiKeywords, const uint8_t keywords);
+		webManager(const webContentEntry *webContent, const uint8_t contentEntries, apiKeyword *apiKeywords, const uint8_t keywords);
 
 		// Set custom api callback function (override existing)
 		void setAPICallback(apiCallback callback);
