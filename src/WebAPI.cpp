@@ -70,6 +70,7 @@ String WebAPI::htmlProcessor(const String &var) {
 	int16_t index = findPlaceholderIndex(var);
 	// Check if keywords was found
 	if (index >= 0) {
+		// Return processed string
 		return processPlaceholderByType(index);
 	}
 	// If not found, return empty string object
@@ -86,8 +87,17 @@ apiResponse WebAPI::apiGet(String *keyword) {
 	int16_t index = findKeywordIndex(keyword);
 	// Check if keywords was found
 	if (index >= 0) {
-		// Get value by type
-		return getValueByType(index);
+		#ifdef useVerboseSerial
+			apiResponse reply = getValueByType(index);
+			Serial.print("WebAPI::apiGet(), Reply code: ");
+			Serial.print(reply.responseCode);
+			Serial.print(" , with reply: ");
+			Serial.println(reply.responseText);
+			return reply;
+		#else
+			// Get value by type
+			return getValueByType(index);
+		#endif
 	}
 	// If not found, return error code
 	return {404, "Not found"};
@@ -99,8 +109,17 @@ apiResponse WebAPI::apiSet(String *keyword, String *value) {
 	int16_t index = findKeywordIndex(keyword);
 	// Check if keywords was found
 	if (index >= 0) {
-		// Set value by type
-		return setValueByType(index, value);
+		#ifdef useVerboseSerial
+			apiResponse reply = setValueByType(index, value);
+			Serial.print("WebAPI::apiSet(), Reply code: ");
+			Serial.print(reply.responseCode);
+			Serial.print(" , with reply: ");
+			Serial.println(reply.responseText);
+			return reply;
+		#else
+			// Set value by type
+			return setValueByType(index, value);
+		#endif
 	}
 	// If not found, return error code
 	return {404, "Not found"};
@@ -108,26 +127,48 @@ apiResponse WebAPI::apiSet(String *keyword, String *value) {
 
 // Find keyword in keywords list
 int16_t WebAPI::findKeywordIndex(String *keyword) {
+	#ifdef useVerboseSerial
+		Serial.print("WebAPI::findKeywordIndex(), Looking for keyword: ");
+		Serial.println(*keyword);
+	#endif
 	// Loop through all API keywords
 	for (uint8_t i = 0; i < _keywords; i++) {
 		// Check if keywords is in requestURL
 		if (keyword->indexOf(_apiKeywords[i].requestKeyword) >= 0) {
+			#ifdef useVerboseSerial
+				Serial.print("WebAPI::findKeywordIndex(), Found keyword with index: ");
+				Serial.println(i);
+			#endif
 			return i;
 		}
 	}
+	#ifdef useVerboseSerial
+		Serial.println("WebAPI::findKeywordIndex(), Keyword not found.");
+	#endif
 	// If not found return -1
 	return -1;
 }
 
 // Find htmlPlaceholder in keywords list
 int16_t WebAPI::findPlaceholderIndex(const String &placeholder) {
+	#ifdef useVerboseSerial
+		Serial.print("WebAPI::findPlaceholderIndex(), Looking for HTML placeholder: ");
+		Serial.println(placeholder);
+	#endif
 	// Loop through all API keywords
 	for (uint8_t i = 0; i < _keywords; i++) {
 		// Check if placeholder is in requestURL
 		if (placeholder.indexOf(_apiKeywords[i].htmlPlaceholder) >= 0) {
+			#ifdef useVerboseSerial
+				Serial.print("WebAPI::findPlaceholderIndex(), Found HTML placeholder with index: ");
+				Serial.println(i);
+			#endif
 			return i;
 		}
 	}
+	#ifdef useVerboseSerial
+		Serial.println("WebAPI::findPlaceholderIndex(), HTML placeholder not found.");
+	#endif
 	// If not found return -1
 	return -1;
 }
