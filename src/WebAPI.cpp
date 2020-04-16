@@ -36,7 +36,39 @@
 //*************************************************************
 
 // Constructor
-WebAPI::WebAPI(apiKeyword *apiKeywords, const uint8_t keywords) : _apiKeywords(apiKeywords), _keywords(keywords){}
+WebAPI::WebAPI(const apiKeyword *apiKeywords, const uint8_t keywords) :  _keywords(keywords){
+	
+	// Prepare local API keywords
+	//_apiKeywords = apiKeyword[_keywords];
+
+	// Write API keywords to local copy
+	for (uint8_t i = 0; i < _keywords; i++) {
+		// Copy request keyword
+		_apiKeywords[i].requestKeyword = apiKeywords[i].requestKeyword;
+		// Copy HTML placeholder
+		_apiKeywords[i].htmlPlaceholder = apiKeywords[i].htmlPlaceholder;
+		// Copy value type
+		_apiKeywords[i].valueType = apiKeywords[i].valueType;
+		// Copy value
+		switch (_apiKeywords[i].valueType) {
+			case FLOAT: {
+				_apiKeywords[i].keyValue.floatValue = apiKeywords[i].keyValue.floatValue;
+			} break;
+			case INT: {
+				_apiKeywords[i].keyValue.intValue = apiKeywords[i].keyValue.intValue;
+			} break;
+			case UINT: {
+				_apiKeywords[i].keyValue.uintValue = apiKeywords[i].keyValue.uintValue;
+			} break;
+			case CHARA: {
+				strcpy(_apiKeywords[i].keyValue.charArrayValue, apiKeywords[i].keyValue.charArrayValue);
+			} break;
+			case BOOL: {
+				_apiKeywords[i].keyValue.boolValue = apiKeywords[i].keyValue.boolValue;
+			} break;
+		}
+	}
+}
 
 // Default API request handler
 apiResponse WebAPI::apiHandler(String *requestURL) {

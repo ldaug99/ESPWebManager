@@ -72,7 +72,7 @@ struct apiResponse {
 class WebAPI {
 	public:
 		// Constructor
-		WebAPI(apiKeyword *apiKeywords, const uint8_t keywords);
+		WebAPI(const apiKeyword *apiKeywords, const uint8_t keywords);
 
 		// Empty constructor
 		WebAPI();
@@ -87,7 +87,7 @@ class WebAPI {
 
 	private:
 		// API keywords struct		
-		apiKeyword *_apiKeywords;
+		apiKeyword _apiKeywords[];
 		// Number of keywords
 		const uint8_t _keywords;
 
