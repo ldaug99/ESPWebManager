@@ -216,37 +216,52 @@ apiResponse WebAPI::getValueByType(uint8_t index) {
 
 // Set value, based on type
 apiResponse WebAPI::setValueByType(uint8_t index, String *value) {
+	// Prepare response
+	apiResponse reply;
+	// Check value type
 	switch (_apiKeywords[index].valueType) {
 		case FLOAT: {
 			// Convert value to float
 			_apiKeywords[index].keyValue.floatValue = value->toFloat();
-			return {200, "Ok"};
+			reply = {200, "Ok"};
 		} break;
 		case INT: {
 			// Convert value to int64, cast to int32
 			_apiKeywords[index].keyValue.intValue = (int32_t)value->toInt();
-			return {200, "Ok"};
+			reply = {200, "Ok"};
 		} break;
 		case UINT: {
 			// Convert value to int64, cast to uint32
 			_apiKeywords[index].keyValue.uintValue = (uint32_t)value->toInt();
-			return {200, "Ok"};
+			reply = {200, "Ok"};
 		} break;
 		case CHARA: {
 			// Write stirng to char buffer
 			value->toCharArray(_apiKeywords[index].keyValue.charArrayValue, charArraySize);
-			return {200, "Ok"};
+			reply = {200, "Ok"};
 		} break;
 		case BOOL: {
 			// Convert value to int64, cast to bool
 			_apiKeywords[index].keyValue.boolValue = (bool)value->toInt();
-			return {200, "Ok"};
+			reply = {200, "Ok"};
 		} break;
+		default: {
+			reply = {404, "Not found"};
+		}
+	}
+	#ifdef useVerboseSerial
+		if (reply.responseCode != 404 && _apiKeywords[index].callback != nullptr) {
+			Serial.println("WebAPI::setValueByType(), Running onChange callback");
+		} else {
+			Serial.println("WebAPI::setValueByType(), No (or invalid) callback given");
+		}
+	#endif
+	if (reply.responseCode != 404 && _apiKeywords[index].callback != nullptr) {
+		_apiKeywords[index].callback(index);
 	}
 	// If not found, return error code
-	return {404, "Not found"};
+	return reply;
 }
-
 
 // Process placeholder by type
 String WebAPI::processPlaceholderByType(uint8_t index) {

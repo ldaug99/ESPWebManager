@@ -49,6 +49,9 @@ typedef enum {
 // Char array size
 #define charArraySize 4
 
+// Callback function to use when variable changes
+typedef void (*onSetCallback)(uint8_t);
+
 // API keyword template, for defining avaliable calls to the API
 struct apiKeyword {
 	String requestKeyword; // Keyword to request, /api/'requestKeyword'
@@ -61,6 +64,7 @@ struct apiKeyword {
 		char charArrayValue[charArraySize];
 		bool boolValue;
 	} keyValue;
+	onSetCallback callback; // Function pointer to call on 
 };
 
 // API request response struct

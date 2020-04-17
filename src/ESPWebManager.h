@@ -61,7 +61,7 @@ typedef apiResponse (*apiCallback)(String *);
 typedef String (*htmlProcessor)(const String &);
 
 // Callback function typedef for HandleNotFound function.
-typedef void (*NotFoundHandle)(AsyncWebServerRequest *request);
+typedef void (*NotFoundHandle)(AsyncWebServerRequest *);
 
 class webManager {
 	friend class WebAPI;
