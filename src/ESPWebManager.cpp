@@ -27,7 +27,6 @@
  * This library was created by ldaug99.
 */ 
 
-#include "Arduino.h"
 #include "ESPWebManager.h"
 
 //*************************************************************
@@ -43,6 +42,73 @@ webManager::webManager(const webContentEntry *webContent, const uint8_t contentE
 webManager::webManager(const webContentEntry *webContent, const uint8_t contentEntries, apiKeyword *apiKeywords, const uint8_t keywords) : _webContent(webContent), _contentEntries(contentEntries){
 	// Start instance of WebAPI
 	api = new WebAPI(apiKeywords, keywords);
+}
+
+// Start SPIFFS
+uint8_t webManager::startSPIFFS() {
+	#ifdef useVerboseSerial
+		Serial.print("webManager::startSPIFFS(), Starting SPIFFS...");
+	#endif
+	if (SPIFFS.begin(true)) {
+		#ifdef useVerboseSerial
+			Serial.println("Success!");
+		#endif
+		return 0;
+	} else {
+		#ifdef useVerboseSerial
+			Serial.println("Failed!");
+		#endif
+		return 1;
+	}
+}
+
+// Start WiFi in client mode
+uint8_t webManager::startWIFIclient(const char* ssid, const char* password) {
+	#ifdef useVerboseSerial
+		Serial.print("webManager::startWIFIclient(), Starting WiFi. ");
+	#endif
+	WiFi.mode(WIFI_STA); // Set WiFi mode to client
+	WiFi.begin(ssid, password); // Begin WiFi libaray
+	#ifdef useVerboseSerial
+		Serial.print("Connecting");
+	#endif
+	// Wait for connection
+	while (WiFi.status() != WL_CONNECTED) {
+		#ifdef useVerboseSerial
+			Serial.print(".");
+		#endif
+		delay(500); // Wait for a time
+	}
+	if (WiFi.status() == WL_CONNECTED) {
+		#ifdef useVerboseSerial
+			Serial.println("Success!");
+			Serial.print("webManager::startWIFIclient(), Connected to ");
+			Serial.println(ssid);
+			Serial.print("webManager::startWIFIclient(), IP address: ");
+			Serial.println(WiFi.localIP());
+		#endif
+		return 0;
+	} else {
+		return 1;
+	}	
+}
+
+// Start MDNS responder
+uint8_t webManager::startMDNS(const char* hostname) {
+	#ifdef useVerboseSerial
+		Serial.print("webManager::startMDNS(), Starting MDNS responder...");
+	#endif
+	if (MDNS.begin(hostname)) {
+		#ifdef useVerboseSerial
+			Serial.println("Success!");
+		#endif
+		return 0;
+	} else {
+		#ifdef useVerboseSerial
+			Serial.println("Failed!");
+		#endif
+		return 1;
+	}
 }
 
 // Set custom API callback (override existing)

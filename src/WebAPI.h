@@ -39,24 +39,26 @@
 
 // State types for the API manager
 typedef enum {
-  	FLOAT, // Value is a double
-  	INT, // Value is a long
-  	UINT, // Value is a unsigned long
-	CHARA, // Value is a char array with 8 array places
-	BOOL // Value is a bool
+	pBOOL,
+	pUINT,
+	pINT,
+	pFLOAT,
+	pSTRING
 } valueTypes; 
 
 // Char array size
 #define charArraySize 4
 
 // Callback function to use when variable changes
-typedef void (*onSetCallback)(uint8_t);
+typedef void (*onSetCallback)();
 
 // API keyword template, for defining avaliable calls to the API
 struct apiKeyword {
 	String requestKeyword; // Keyword to request, /api/'requestKeyword'
 	String htmlPlaceholder; // HTML placeholder to search for
 	uint8_t valueType; // The type of value that the keyword codes for 
+	void *valuePointer;
+	/*
 	union {
 		float_t floatValue;
 		int32_t intValue;
@@ -64,6 +66,7 @@ struct apiKeyword {
 		char charArrayValue[charArraySize];
 		bool boolValue;
 	} keyValue;
+	*/
 	onSetCallback callback; // Function pointer to call on 
 };
 

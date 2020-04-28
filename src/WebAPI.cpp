@@ -164,6 +164,22 @@ int16_t WebAPI::findPlaceholderIndex(const String &placeholder) {
 				Serial.print(i);
 				Serial.print(" , and value: ");
 				switch (_apiKeywords[i].valueType) {
+					case pBOOL: {
+						Serial.println(String(*(bool*)_apiKeywords[i].valuePointer));
+					} break;
+					case pUINT: {
+						Serial.println(String(*(uint32_t*)_apiKeywords[i].valuePointer));
+					} break;
+					case pINT: {
+						Serial.println(String(*(int32_t*)_apiKeywords[i].valuePointer));
+					} break;
+					case pFLOAT: {
+						Serial.println(String(*(float*)_apiKeywords[i].valuePointer));
+					} break;
+					case pSTRING: {
+						Serial.println(String(*(String*)_apiKeywords[i].valuePointer));
+					} break;
+					/*
 					case FLOAT: {
 						Serial.println(String(_apiKeywords[i].keyValue.floatValue));
 					} break;
@@ -179,6 +195,7 @@ int16_t WebAPI::findPlaceholderIndex(const String &placeholder) {
 					case BOOL: {
 						Serial.println(String(_apiKeywords[i].keyValue.boolValue));
 					} break;
+					*/
 				}
 			#endif
 			return i;
@@ -194,6 +211,22 @@ int16_t WebAPI::findPlaceholderIndex(const String &placeholder) {
 // Get value, based on type
 apiResponse WebAPI::getValueByType(uint8_t index) {
 	switch (_apiKeywords[index].valueType) {
+		case pBOOL: {
+			return {200, String(*(bool*)_apiKeywords[index].valuePointer)};
+		} break;
+		case pUINT: {
+			return {200, String(*(uint32_t*)_apiKeywords[index].valuePointer)};
+		} break;
+		case pINT: {
+			return {200, String(*(int32_t*)_apiKeywords[index].valuePointer)};
+		} break;
+		case pFLOAT: {
+			return {200, String(*(float*)_apiKeywords[index].valuePointer)};
+		} break;
+		case pSTRING: {
+			return {200, String(*(String*)_apiKeywords[index].valuePointer)};
+		} break;
+		/*
 		case FLOAT: {
 			return {200, String(_apiKeywords[index].keyValue.floatValue)};
 		} break;
@@ -209,6 +242,7 @@ apiResponse WebAPI::getValueByType(uint8_t index) {
 		case BOOL: {
 			return {200, String(_apiKeywords[index].keyValue.boolValue)};
 		} break;
+		*/
 	}
 	// If not found, return error code
 	return {404, "Not found"};
@@ -220,6 +254,32 @@ apiResponse WebAPI::setValueByType(uint8_t index, String *value) {
 	apiResponse reply;
 	// Check value type
 	switch (_apiKeywords[index].valueType) {
+		case pBOOL: {
+			// Convert value to float
+			*(bool*)_apiKeywords[index].valuePointer = (bool)value->toInt();
+			reply = {200, "Ok"};
+		} break;
+		case pUINT: {
+			// Convert value to int64, cast to int32
+			*(uint32_t*)_apiKeywords[index].valuePointer = (int32_t)value->toInt();
+			reply = {200, "Ok"};
+		} break;
+		case pINT: {
+			// Convert value to int64, cast to uint32
+			*(int32_t*)_apiKeywords[index].valuePointer = (uint32_t)value->toInt();
+			reply = {200, "Ok"};
+		} break;
+		case pFLOAT: {
+			// Convert value to int64, cast to bool
+			*(float*)_apiKeywords[index].valuePointer = value->toFloat();
+			reply = {200, "Ok"};
+		} break;
+		case pSTRING: {
+			// Save string to string
+			*(String*)_apiKeywords[index].valuePointer = *value;
+			reply = {200, "Ok"};
+		} break;
+		/*
 		case FLOAT: {
 			// Convert value to float
 			_apiKeywords[index].keyValue.floatValue = value->toFloat();
@@ -248,6 +308,7 @@ apiResponse WebAPI::setValueByType(uint8_t index, String *value) {
 		default: {
 			reply = {404, "Not found"};
 		}
+		*/
 	}
 	#ifdef useVerboseSerial
 		if (reply.responseCode != 404 && _apiKeywords[index].callback != nullptr) {
@@ -257,7 +318,7 @@ apiResponse WebAPI::setValueByType(uint8_t index, String *value) {
 		}
 	#endif
 	if (reply.responseCode != 404 && _apiKeywords[index].callback != nullptr) {
-		_apiKeywords[index].callback(index);
+		_apiKeywords[index].callback();
 	}
 	// If not found, return error code
 	return reply;
@@ -266,6 +327,22 @@ apiResponse WebAPI::setValueByType(uint8_t index, String *value) {
 // Process placeholder by type
 String WebAPI::processPlaceholderByType(uint8_t index) {
 	switch (_apiKeywords[index].valueType) {
+		case pBOOL: {
+			return String(*(bool*)_apiKeywords[index].valuePointer);
+		} break;
+		case pUINT: {
+			return String(*(uint32_t*)_apiKeywords[index].valuePointer);
+		} break;
+		case pINT: {
+			return String(*(int32_t*)_apiKeywords[index].valuePointer);
+		} break;
+		case pFLOAT: {
+			return String(*(float*)_apiKeywords[index].valuePointer);
+		} break;
+		case pSTRING: {
+			return String(*(String*)_apiKeywords[index].valuePointer);
+		} break;
+		/*
 		case FLOAT: {
 			return String(_apiKeywords[index].keyValue.floatValue);
 		} break;
@@ -281,6 +358,7 @@ String WebAPI::processPlaceholderByType(uint8_t index) {
 		case BOOL: {
 			return String(_apiKeywords[index].keyValue.boolValue);
 		} break;
+		*/
 	}
 	// If not found, return empty string object
 	return String();

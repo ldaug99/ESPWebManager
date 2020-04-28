@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="description" content="Web interface using WebManager">
+	<meta name="keywords" content="HTML,CSS,JavaScript">
+	<meta name="author" content="ldaug99">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="myScript.js"></script>
+	<link rel="stylesheet" href="styles.css">
+	<title>WebManager</title>
+</head>
+<body onload="updateHTML();">
+	<h1 id="header">WebManager Interface</h1>
+	<h2 id="subheader">LED pin settings</h2>
+	
+	<p id="normalText">LED1 state: <span id="LED1Txt">Off</span></p>
+	<button type="button" id="LED1Button" value="LED1State=%LED1STATE%" onclick="apiRequest(HTTP_POST, this.value);">Turn on LED1</button>
+
+	<p id="normalText">LED2 state: <span id="LED2Txt">Off</span></p>
+	<button type="button" id="LED2Button" value="LED2State=%LED2STATE%" onclick="apiRequest(HTTP_POST, this.value);">Turn on LED2</button>
+</body>
+</html>

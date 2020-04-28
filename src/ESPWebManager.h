@@ -32,6 +32,9 @@
 #define _ESPWebManager_
 
 #include "Arduino.h"
+#include <WiFi.h>
+#include <WiFiClient.h>
+#include <ESPmDNS.h>
 #include "ESPAsyncWebServer.h"
 #include "SPIFFS.h"
 #include "WebAPI.h"
@@ -71,6 +74,13 @@ class webManager {
 		webManager(const webContentEntry *webContent, const uint8_t contentEntries);
 		// Constructor with API enabled
 		webManager(const webContentEntry *webContent, const uint8_t contentEntries, apiKeyword *apiKeywords, const uint8_t keywords);
+
+		// Generic function for starting WiFi in station mode
+		static uint8_t startWIFIclient(const char* ssid, const char* password);
+		// Generic function for starting SPIFFS
+		static uint8_t startSPIFFS();
+		// Generic function for starting MDNS responder
+		static uint8_t startMDNS(const char* hostname);
 
 		// Set custom api callback function (override existing)
 		void setAPICallback(apiCallback callback);
